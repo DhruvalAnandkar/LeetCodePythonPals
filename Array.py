@@ -29,6 +29,3 @@ class Array:
         else:
             arr = len(list(set(arr)))
         return arr
-        
-# Test executer
-print(Array().sort(Array().dup([1,1,2],'FILTER')))
