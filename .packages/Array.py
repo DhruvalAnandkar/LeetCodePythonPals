@@ -14,6 +14,7 @@ class Array:
             List[Union[int,str]]: Returns the updated ordered list
         """
         return sorted(arr,reverse=reverse)
+    
     def dup(self, arr: List[Union[int,str]], repeat: int=1, action: str='FILTER')-> List[Union[list,int]]:
         """Manipulates duplicates in the list
 
@@ -69,3 +70,21 @@ class Array:
         """
         arr[:] = arr[-(steps%len(arr)):] + arr[:-(steps%len(arr))]
         return arr
+    def maxProfit(self,prices: List[int])->int:
+        """Finds the profit for x days
+
+        Args:
+            prices (List[int]): Array to search
+
+        Returns:
+            int: Maximum profit that you can achieve
+        """
+        min_price = float('inf')
+        max_profit = 0
+        for price in prices:
+            if price < min_price:
+                min_price = price
+            profit = price - min_price
+            if profit > max_profit:
+                max_profit = profit
+        return max_profit
