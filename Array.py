@@ -14,7 +14,6 @@ class Array:
             List[Union[int,str]]: Returns the updated ordered list
         """
         return sorted(arr,reverse=reverse)
-    
     def dup(self, arr: List[Union[int,str]], repeat: int=1, action: str='FILTER')-> List[Union[list,int]]:
         """Manipulates duplicates in the list
 
@@ -58,3 +57,15 @@ class Array:
             int: The least common number in array
         """
         return min(Counter(arr).keys(), key=Counter(arr).get) if common else min(arr)
+    def rotate(self, arr: List[Union[int,str]], steps=1)-> List[Union[int,str]]:
+        """Rotates the array by x of steps
+
+        Args:
+            arr (List[Union[int,str]]): Array to rotate
+            steps (int, optional): How many steps to rotate. Defaults to 1.
+
+        Returns:
+            List[Union[int,str]]: Rotated array
+        """
+        arr[:] = arr[-(steps%len(arr)):] + arr[:-(steps%len(arr))]
+        return arr
