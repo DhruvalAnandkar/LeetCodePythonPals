@@ -1,4 +1,5 @@
 from typing import List, Union
+from collections import Counter
 class Array:
     """Modifies the List objects
     """
@@ -35,3 +36,23 @@ class Array:
                 if(updated_arr.count(arr[x]) < repeat): updated_arr.append(arr[x])
             arr = len(updated_arr)
         return arr
+    def max(self, arr: List[Union[int,str]])->int:
+        """Returns the most common number
+
+        Args:
+            arr (List[Union[int,str]]): Array to check for
+
+        Returns:
+            int: The common number in array
+        """
+        return max(Counter(arr).keys(), key=Counter(arr).get)
+    def min(self, arr: List[Union[int,str]])->int:
+        """Returns the least common number
+
+        Args:
+            arr (List[Union[int,str]]): Array to check for
+
+        Returns:
+            int: The least common number in array
+        """
+        return min(Counter(arr).keys(), key=Counter(arr).get)
