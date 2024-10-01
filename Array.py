@@ -36,23 +36,25 @@ class Array:
                 if(updated_arr.count(arr[x]) < repeat): updated_arr.append(arr[x])
             arr = len(updated_arr)
         return arr
-    def max(self, arr: List[Union[int,str]])->int:
-        """Returns the most common number
+    def max(self, arr: List[Union[int,str]], common: bool=True)->int:
+        """Returns the most common number or highest number in the array
 
         Args:
             arr (List[Union[int,str]]): Array to check for
-
+            common (bool): Gets the common number. Default to 'True'
+            
         Returns:
             int: The common number in array
         """
-        return max(Counter(arr).keys(), key=Counter(arr).get)
-    def min(self, arr: List[Union[int,str]])->int:
-        """Returns the least common number
+        return max(Counter(arr).keys(), key=Counter(arr).get) if common else max(arr)
+    def min(self, arr: List[Union[int,str]], common: bool=True)->int:
+        """Returns the least common number or lowest number in the array
 
         Args:
             arr (List[Union[int,str]]): Array to check for
+            common (bool): Gets the least common number. Default to 'True'
 
         Returns:
             int: The least common number in array
         """
-        return min(Counter(arr).keys(), key=Counter(arr).get)
+        return min(Counter(arr).keys(), key=Counter(arr).get) if common else min(arr)
