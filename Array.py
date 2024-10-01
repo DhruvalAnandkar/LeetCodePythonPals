@@ -31,4 +31,4 @@ class Array:
         return arr
         
 # Test executer
-print(Array().dup([1,1,2],'FILTER'))
+print(Array().sort(Array().dup([1,1,2],'FILTER')))
