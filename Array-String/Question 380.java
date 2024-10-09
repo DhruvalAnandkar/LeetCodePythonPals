@@ -40,10 +40,10 @@ class RandomizedSet {
             }
         } else {
             if ((val * -1) >= nset.length) {
-                nset = Arrays.copyOf(nset, val);
+                nset = Arrays.copyOf(nset, (val * -1) + 1);
                 nset[(val * -1)] = true;
                 return true;
-            } else if (!nset[val]) {
+            } else if (!nset[val * -1]) {
                 nset[val * -1] = true;
                 return true;
             } else {
@@ -56,7 +56,7 @@ class RandomizedSet {
         if (val > 0) {
             if (val > pset.length) {
                 return false;
-            } else if (!pset[val]) {
+            } else if (!pset[val - 1]) {
                 return false;
             } else {
                 if (val - 1 == pset.length)
@@ -65,10 +65,10 @@ class RandomizedSet {
                     pset[val - 1] = false;
                 return true;
             }
-        }else {
+        } else {
             if ((val * -1) >= nset.length) {
                 return false;
-            } else if (!nset[val]) {
+            } else if (!nset[val * -1]) {
                 return false;
             } else {
                 if (val * -1 == nset.length + 1)  
