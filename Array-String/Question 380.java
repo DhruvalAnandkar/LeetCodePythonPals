@@ -17,30 +17,34 @@ You must implement the functions of the class such that each function works in a
 
 
 class RandomizedSet {
-    boolean[] pset = new int[0];
-    boolean[] nset = new int[0]; //also holds 0
+    boolean[] pset;
+    boolean[] nset; //also holds 0
 
     public RandomizedSet() {
-        pset = new int[0];
-        nset = new int[0];
+        pset = new boolean[0];
+        nset = new boolean[0];
     }
     
     public boolean insert(int val) {
-        if (val >0) {
+        if (val > 0) {
             if (val > pset.length) {
                 pset = Arrays.copyOf(pset, val);
                 pset[val - 1] = true;
-            } else if (pset[val] == null) {
+                return true;
+            } else if (!pset[val - 1]) {
                 pset[val - 1] = true;
+                return true;
             } else {
                 return false;
             }
         } else {
-            if ((val * -1) >= pset.length) {
-                pset = Arrays.copyOf(pset, val);
-                pset[(val * -1)] = true;
-            } else if (pset[val] == null) {
-                pset[val * -1] = true;
+            if ((val * -1) >= nset.length) {
+                nset = Arrays.copyOf(nset, val);
+                nset[(val * -1)] = true;
+                return true;
+            } else if (!nset[val]) {
+                nset[val * -1] = true;
+                return true;
             } else {
                 return false;
             }
@@ -51,19 +55,25 @@ class RandomizedSet {
         if (val > 0) {
             if (val > pset.length) {
                 return false;
-            } else if (pset[val] == null) {
+            } else if (!pset[val]) {
                 return false;
             } else {
-                pset[val - 1] = false;
+                if (val - 1 == pset.length)
+                    pset = Arrays.copyOf(pset, pset.length - 1);
+                else
+                    pset[val - 1] = false;
                 return true;
             }
         }else {
-            if ((val * -1) >= pset.length) {
+            if ((val * -1) >= nset.length) {
                 return false;
-            } else if (pset[val] == null) {
+            } else if (!nset[val]) {
                 return false;
             } else {
-                pset[val * -1] = false;
+                if (val * -1 == nset.length + 1)  
+                    nset = Arrays.copyOf(nset, nset.length - 1);
+                else
+                    nset[val * -1] = false;
                 return true;
             }
         }       
