@@ -18,33 +18,52 @@ You must implement the functions of the class such that each function works in a
 
 //WIP
 class RandomizedSet {
-    boolean[] pset;
-    boolean[] nset; //also holds 0
+    int[] tset; //holds all nums, 0 index isn't used [x, 1, -3, 4, 77...]
+    int[] pset; //holds pos num index in tset, 0 for not present: [1, 0, 0, 4...]
+    int[] nset; //holds non-pos num index in tset, 0 for not present: [0, 0, 0, 3...]
+
+    //below values are an attempt to reduce memory used by shrinking the pset/nset arrays to the smallest size needed
+    int phigh; //biggest magnitude pos num (default: 0)
+    int p2ndhigh; //2nd biggest pos mag
+    int nhigh; //biggest magnitude neg num (default: -1)
+    int n2ndhigh; //2nd biggest neg mag
 
     public RandomizedSet() {
-        pset = new boolean[0];
-        nset = new boolean[0];
+        tset = new int[1];
+        pset = new int[0];
+        nset = new int[0];
+        phigh = 0;
+        p2ndhigh = 0;
+        nhigh = -1;
+        n2ndhigh = -1;
+
     }
     
     public boolean insert(int val) {
         if (val > 0) {
-            if (val > pset.length) {
-                pset = Arrays.copyOf(pset, val);
-                pset[val - 1] = true;
-                return true;
-            } else if (!pset[val - 1]) {
-                pset[val - 1] = true;
+            if (val > pset.length) pset = Arrays.copyOf(pset, val);
+            if (pset[val - 1] == 0) {
+                pset[val - 1] = tset.length;
+                tset = Arrays.copyOf(tset, tset.length + 1);
+                tset[tset.length - 1] = val;
+                if (val > phigh) {
+                    p2ndhigh = phigh;
+                    phigh = val;
+                }
                 return true;
             } else {
                 return false;
             }
         } else {
-            if ((val * -1) >= nset.length) {
-                nset = Arrays.copyOf(nset, (val * -1) + 1);
-                nset[(val * -1)] = true;
-                return true;
-            } else if (!nset[val * -1]) {
-                nset[val * -1] = true;
+            if ((val * -1) + 1 > nset.length) nset = Arrays.copyOf(nset, (val * -1) + 1);
+            if (nset[(val * -1)] == 0) {
+                nset[(val * -1)] = tset.length;
+                tset = Arrays.copyOf(tset, tset.length + 1);
+                tset[tset.length - 1] = val;
+                if (val * -1 > nhigh) {
+                    n2ndhigh = nhigh;   
+                    nhigh = (val * -1);
+                }
                 return true;
             } else {
                 return false;
@@ -54,33 +73,53 @@ class RandomizedSet {
     
     public boolean remove(int val) {
         if (val > 0) {
-            if (val > pset.length) {
-                return false;
-            } else if (!pset[val - 1]) {
+            if ((val > pset.length) || (pset[val - 1] == 0)) {
                 return false;
             } else {
-                if (val - 1 == pset.length)
-                    pset = Arrays.copyOf(pset, pset.length - 1);
-                else
-                    pset[val - 1] = false;
+                if (tset[tset.length - 1] > 0) {
+                    pset[tset[tset.length - 1] - 1] = pset[val - 1]; 
+                } else {
+                    nset[tset[tset.length - 1] * -1] = pset[val - 1];
+                }
+                
+                tset[pset[val - 1]] = tset[tset.length - 1];
+                tset = Arrays.copyOf(tset, tset.length - 1);
+                pset[val - 1] = 0;
+                if (val == phigh) phigh = p2ndhigh;
+                pset = Arrays.copyOf(pset, phigh);
                 return true;
             }
         } else {
-            if ((val * -1) >= nset.length) {
-                return false;
-            } else if (!nset[val * -1]) {
+            if (((val * -1) + 1 > nset.length) || (nset[(val * -1)] == 0)) {
                 return false;
             } else {
-                if (val * -1 == nset.length + 1)  
-                    nset = Arrays.copyOf(nset, nset.length - 1);
-                else
-                    nset[val * -1] = false;
+                if (tset[tset.length - 1] > 0) {
+                    pset[tset[tset.length - 1] - 1] = nset[val * -1]; 
+                } else {
+                    nset[tset[tset.length - 1] * -1] = nset[val * -1];
+                }
+
+                tset[nset[(val * -1)]] = tset[tset.length - 1];
+                tset = Arrays.copyOf(tset, tset.length - 1);
+                nset[(val * -1)] = 0;
+                if (val == nhigh * -1) nhigh = n2ndhigh;
+                nset = Arrays.copyOf(nset, nhigh + 1);
                 return true;
             }
         }       
     }
     
-    public int getRandom() {
-        
+    public int getRandom() { 
+        Random r = new Random();
+        int i = r.nextInt(tset.length - 1) + 1;
+        return tset[i];
     }
 }
+
+/**
+ * Your RandomizedSet object will be instantiated and called as such:
+ * RandomizedSet obj = new RandomizedSet();
+ * boolean param_1 = obj.insert(val);
+ * boolean param_2 = obj.remove(val);
+ * int param_3 = obj.getRandom();
+ */
