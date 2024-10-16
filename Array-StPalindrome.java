@@ -25,17 +25,15 @@ Explanation: The longest palindrome that can be built is "a", whose length is 1.
 */
 
 
-//WIP, not working
 import java.util.*;
 class Solution {
-        public int longestPalindrome(String s) {
-        String[] arr = s.split("");
-        arr = Arrays.copyOfRange(arr, 1, arr.length);
+    public int longestPalindrome(String s) {
+        char[] arr = s.toCharArray();
         Arrays.sort(arr);
         boolean hasOdd = false;
         int k = 0;
-        for (int i = 1; i < arr.length; i++) {
-            if (arr[i] == arr[i - 1]) {
+        for (int i = 0; i < arr.length; i++) {
+            if (!(i == arr.length - 1) && arr[i] == arr[i + 1]) {
                 k++;
                 i++;
             } else {
