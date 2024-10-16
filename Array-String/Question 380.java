@@ -15,103 +15,44 @@ You must implement the functions of the class such that each function works in a
 
 */
 
+import java.util.*;
 
-//WIP
 class RandomizedSet {
-    int[] tset; //holds all nums, 0 index isn't used [x, 1, -3, 4, 77...]
-    int[] pset; //holds pos num index in tset, 0 for not present: [1, 0, 0, 4...]
-    int[] nset; //holds non-pos num index in tset, 0 for not present: [0, 0, 0, 3...]
-
-    //below values are an attempt to reduce memory used by shrinking the pset/nset arrays to the smallest size needed
-    int phigh; //biggest magnitude pos num (default: 0)
-    int p2ndhigh; //2nd biggest pos mag
-    int nhigh; //biggest magnitude neg num (default: -1)
-    int n2ndhigh; //2nd biggest neg mag
+    HashMap<Integer, Integer> locset; 
+    int[] tset;
 
     public RandomizedSet() {
-        tset = new int[1];
-        pset = new int[0];
-        nset = new int[0];
-        phigh = 0;
-        p2ndhigh = 0;
-        nhigh = -1;
-        n2ndhigh = -1;
-
+        locset = new HashMap<Integer, Integer>();
+        tset = new int[0];
     }
     
     public boolean insert(int val) {
-        if (val > 0) {
-            if (val > pset.length) pset = Arrays.copyOf(pset, val);
-            if (pset[val - 1] == 0) {
-                pset[val - 1] = tset.length;
-                tset = Arrays.copyOf(tset, tset.length + 1);
-                tset[tset.length - 1] = val;
-                if (val > phigh) {
-                    p2ndhigh = phigh;
-                    phigh = val;
-                }
-                return true;
-            } else {
-                return false;
-            }
+        if (locset.containsKey(val)) {
+            return false;
         } else {
-            if ((val * -1) + 1 > nset.length) nset = Arrays.copyOf(nset, (val * -1) + 1);
-            if (nset[(val * -1)] == 0) {
-                nset[(val * -1)] = tset.length;
-                tset = Arrays.copyOf(tset, tset.length + 1);
-                tset[tset.length - 1] = val;
-                if (val * -1 > nhigh) {
-                    n2ndhigh = nhigh;   
-                    nhigh = (val * -1);
-                }
-                return true;
-            } else {
-                return false;
-            }
+            tset = Arrays.copyOf(tset, tset.length + 1);
+            tset[tset.length - 1] = val;
+            locset.put(val, tset.length - 1);
+            return true;
         }
     }
     
     public boolean remove(int val) {
-        if (val > 0) {
-            if ((val > pset.length) || (pset[val - 1] == 0)) {
-                return false;
-            } else {
-                if (tset[tset.length - 1] > 0) {
-                    pset[tset[tset.length - 1] - 1] = pset[val - 1]; 
-                } else {
-                    nset[tset[tset.length - 1] * -1] = pset[val - 1];
-                }
-                
-                tset[pset[val - 1]] = tset[tset.length - 1];
-                tset = Arrays.copyOf(tset, tset.length - 1);
-                pset[val - 1] = 0;
-                if (val == phigh) phigh = p2ndhigh;
-                pset = Arrays.copyOf(pset, phigh);
-                return true;
-            }
+        if (!locset.containsKey(val)) {
+            return false;
         } else {
-            if (((val * -1) + 1 > nset.length) || (nset[(val * -1)] == 0)) {
-                return false;
-            } else {
-                if (tset[tset.length - 1] > 0) {
-                    pset[tset[tset.length - 1] - 1] = nset[val * -1]; 
-                } else {
-                    nset[tset[tset.length - 1] * -1] = nset[val * -1];
-                }
-
-                tset[nset[(val * -1)]] = tset[tset.length - 1];
-                tset = Arrays.copyOf(tset, tset.length - 1);
-                nset[(val * -1)] = 0;
-                if (val == nhigh * -1) nhigh = n2ndhigh;
-                nset = Arrays.copyOf(nset, nhigh + 1);
-                return true;
-            }
+        	int t = locset.get(val);
+            tset[t] = tset[tset.length - 1];
+            locset.put(tset[t], t);
+            tset = Arrays.copyOf(tset, tset.length - 1);
+            locset.remove(val);
+            return true;
         }       
     }
     
     public int getRandom() { 
         Random r = new Random();
-        int i = r.nextInt(tset.length - 1) + 1;
+        int i = r.nextInt(tset.length);
         return tset[i];
     }
 }
